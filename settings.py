@@ -8,7 +8,7 @@ class Settings:
 
     def __init__(self):
         # 画面に関する設定
-        self.screen_width = 800
+        self.screen_width = 850
         self.screen_height = 600
         # self.bg_color = (230,230,230)
         self.bg_color = (5, 5, 50)
