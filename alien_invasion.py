@@ -7,6 +7,7 @@ from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from star import Star
 
 """ ゲームのアセットと動作を管理する全体的なクラス """
 
@@ -29,10 +30,12 @@ class AlienInvasion:
 
         pygame.display.set_caption("エイリアン侵略")
 
+        self.stars = pygame.sprite.Group()
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
 
+        self._create_sky()
         self._create_fleet()
 
     """ ゲームのメインループを開始する """
@@ -104,6 +107,7 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
 
+        self.stars.draw(self.screen)
         self.aliens.draw(self.screen)
 
         # 最新の状態の画面を表示する
@@ -139,6 +143,33 @@ class AlienInvasion:
         alien.rect.x = alien.x
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
+
+    def _create_sky(self):
+        #一個の星を作成する
+        #各星の間には、星１個分のスペースを空ける
+        star = Star(self)
+        star_width, star_height = star.rect.size
+        available_space_x = self.settings.screen_width - (3 * star_width)
+        number_stars_x = available_space_x // (2 * star_width)
+
+        # 画面に収まるエイリアンの列数を決定する
+        ship_height = self.ship.rect.height
+        available_space_y = (self.settings.screen_height - (3 * star_height) - ship_height)
+        number_rows = available_space_y // (2 * star_height)
+
+        #エイリアンの艦隊を作成する
+        for row_number in range(number_rows):
+            for star_number in range(number_stars_x):
+                self._create_star(star_number, row_number)
+
+    """ 背景の星を描画する """
+    def _create_star(self,star_number, row_number):
+        star = Star(self)
+        star_width, star_height = star.rect.size
+        star.x = star_width + 2 * star_width * star_number
+        star.rect.x = star.x
+        star.rect.y = star.rect.height + 2 * star.rect.height * row_number
+        self.stars.add(star)
 
 
 if __name__ == "__main__":
