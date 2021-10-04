@@ -8,6 +8,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from star import Star
+from random import randint
 
 """ ゲームのアセットと動作を管理する全体的なクラス """
 
@@ -157,10 +158,12 @@ class AlienInvasion:
         available_space_y = (self.settings.screen_height - (3 * star_height) - ship_height)
         number_rows = available_space_y // (3 * star_height)
 
-        #エイリアンの艦隊を作成する
+        #星の集団を作成する
         for row_number in range(number_rows):
             for star_number in range(number_stars_x):
-                self._create_star(star_number, row_number)
+                is_star = randint(0,2)
+                if is_star == 0:
+                    self._create_star(star_number, row_number)
 
     """ 背景の星を描画する """
     def _create_star(self,star_number, row_number):
